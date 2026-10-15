@@ -1,0 +1,28 @@
+if TARGET_UMS512_1H10
+
+config RG_ROTATE
+	bool "Build for RG Rotate"
+	default n
+
+config SYS_BOARD
+	default "ums512_1h10"
+
+config SYS_VENDOR
+	default "spreadtrum"
+
+config SYS_SOC
+	default "sharkl5pro"
+
+config P21H180
+	bool "Build for P21H180"
+	default n
+
+config SYS_CONFIG_NAME
+	default "ums512_rg_rotate" if RG_ROTATE
+	default "ums512_p21h180" if P21H180
+	default "ums512_1h10"
+
+config SYS_TEXT_BASE
+	default 0x9f000000
+
+endif

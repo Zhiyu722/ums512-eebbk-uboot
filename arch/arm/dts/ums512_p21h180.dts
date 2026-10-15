@@ -1,0 +1,165 @@
+/*
+ * BBK UMS512 P21H180 board DTS file for U-Boot
+ */
+
+/dts-v1/;
+
+#include "ums512.dtsi"
+#include "sc2730.dtsi"
+#include "lcd/lcd_ft8201ab_boe_mipi_fhd_bbk_H180.dtsi"
+
+/ {
+	model = "BBK UMS512 P21H180";
+	compatible = "bbk,ums512-p21h180", "sprd,ums512";
+
+	sprd,sc-id = "ums512 p21h180 1000";
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		fastboot_reserved: fastbootbuffer@b0000000 {
+			reg = <0x0 0xb0000000 0x0 0x28000000>;
+		};
+
+		download_reserved: sparsebuffer@b0000000 {
+			reg = <0x0 0xb0000000 0x0 0x28000000>;
+		};
+
+		dl_alt1_reserved: alterbuffer1@92000000 {
+			reg = <0x0 0x92000000 0x0 0x00200000>;
+		};
+
+		dl_alt2_reserved: alterbuffer2@92200000 {
+			reg = <0x0 0x92200000 0x0 0x00200000>;
+		};
+
+		pre_log_buffer: pre_log_buffer@92300000 {
+			reg = <0x0 0x92300000 0x0 0x00002000>;
+		};
+
+		log_reserved: logbuffer@9de80000 {
+			reg = <0x0 0x9de80000 0x0 0x00080000>;
+		};
+
+		secboot_arg_reserved: secboot-arg-mem@92450000 {
+			reg = <0x0 0x92450000 0x0 0xf00000>;
+		};
+
+		secboot_vbmeta_reserved: secboot-vbmeta-mem@93350000 {
+			reg = <0x0 0x93350000 0x0 0x800000>;
+		};
+
+		sml_reserved: sml-mem@94000000 {
+			reg = <0x0 0x94000000 0x0 0x00020000>;
+		};
+
+		tos_reserved: tos-mem@94020000 {
+			reg = <0x0 0x94020000 0x0 0x05fe0000>;
+		};
+
+		secboot_verify_reserved: secboot-verify-mem@9a000000 {
+			reg = <0x0 0x9a000000 0x0 0x3000000>;
+		};
+
+		bmp_reserved: bmp-mem@9d000000 {
+			reg = <0x0 0x9d000000 0x0 0x009e4000>;
+		};
+
+		logo_reserved: logobuffer@9e000000 {
+			reg = <0x0 0x9e000000 0x0 0x009e4000>;
+		};
+	};
+
+	ion {
+		compatible = "sprd,ion";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		heap@3 {
+			reg = <3>;
+			label = "carveout_logo";
+			type = <2>;
+			memory-region = <&logo_reserved>;
+		};
+
+		heap@4 {
+			reg = <4>;
+			label = "carveout_fastboot";
+			type = <2>;
+			memory-region = <&fastboot_reserved>;
+		};
+
+		heap@5 {
+			reg = <5>;
+			label = "carveout_download";
+			type = <2>;
+			memory-region = <&download_reserved>;
+		};
+
+		heap@8 {
+			reg = <8>;
+			label = "carveout_log";
+			type = <2>;
+			memory-region = <&log_reserved>;
+		};
+
+		heap@9 {
+			reg = <9>;
+			label = "carveout_bmp";
+			type = <2>;
+			memory-region = <&bmp_reserved>;
+		};
+	};
+
+	fgu {
+		compatible = "sprd,sc2730-fgu";
+		sprd,fgu-blk-index = <3>;
+	};
+
+	backlight {
+		compatible = "sharkl5pro-pwm-backlight";
+		pwm-index = <2>;
+		pwm-scale = <3>;
+		pwm-clk-sel = <1>;
+		pwm-en-bit = <27>;
+		pwm-en-reg = <0x327D0008>;
+	};
+
+	lcd-panel {
+		compatible = "sprd,generic-mipi-panel";
+		sprd,lcd-avdd-gpio = <139>;
+		sprd,lcd-avee-gpio = <137>;
+		sprd,lcd-reset-gpio = <50>;
+	};
+};
+
+/* SPI 总线：PMIC 挂在 SPI0 上，必须启用 */
+&spi0 {
+	status = "okay";
+};
+
+&spi1 {
+	status = "okay";
+};
+
+&spi2 {
+	status = "okay";
+};
+
+&spi3 {
+	status = "okay";
+};
+
+/* 充电 IC：BQ2560X，挂载在 i2c4 */
+&i2c4 {
+	status = "okay";
+
+	bq2560x: charger@6b {
+		compatible = "sprd,bq2560x-charger";
+		reg = <0x6b>;
+		sprd,bq2560x-i2c-bus = <4>;
+		status = "okay";
+	};
+};

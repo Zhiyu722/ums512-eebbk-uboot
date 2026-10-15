@@ -1,0 +1,69 @@
+/ { lcds {
+	lcd_ft8201ab_boe_mipi_fhd_bbk_H180: lcd_ft8201ab_boe_mipi_fhd_bbk_H180 {
+
+		sprd,dsi-work-mode = <1>;
+		sprd,dsi-lane-number = <4>;
+		sprd,dsi-color-format = "rgb888";
+
+		sprd,phy-bit-clock = <1382000>;
+		sprd,phy-escape-clock = <20000>;
+
+		sprd,width-mm = <145>;
+		sprd,height-mm = <198>;
+
+		sprd,esd-check-enable = <1>;
+		sprd,esd-check-mode = <0>;
+		sprd,esd-check-register = <0x0a>;
+		sprd,esd-check-value = <0x9c>;
+		sprd,esd-check-period = <1000>;
+
+		sprd,use-dcs-write;
+		sprd,lcd-no-id;
+
+		sprd,reset-on-sequence = <1 20>, <0 20>, <1 70>;
+		sprd,reset-off-sequence = <0 5>;
+
+		sprd,initial-command = [
+			05 55 00 01 11
+			05 08 00 01 29
+			29 00 00 02 00 00
+			29 00 00 04 ff 82 01 01
+			29 00 00 02 00 80
+			29 00 00 03 ff 82 01
+			29 00 00 02 00 88
+			29 00 00 02 b0 07
+			29 00 00 02 00 00
+			29 00 00 02 fa 02
+		];
+
+		sprd,sleep-in-command = [
+			29 00 00 02 00 00
+			29 00 00 02 fa 5a
+			29 00 00 02 00 88
+			29 00 00 02 b0 01
+			13 0d 00 01 28
+			13 78 00 01 10
+		];
+
+		sprd,sleep-out-command = [
+			13 78 00 01 11
+			13 32 00 01 29
+		];
+
+		display-timings {
+			native-mode = <&lcd_ft8201ab_h180_timing0>;
+
+			lcd_ft8201ab_h180_timing0: timing0 {
+				clock-frequency = <192000000>;
+				hactive = <1280>;
+				vactive = <1752>;
+				hback-porch = <122>;
+				hfront-porch = <150>;
+				vback-porch = <20>;
+				vfront-porch = <231>;
+				hsync-len = <33>;
+				vsync-len = <16>;
+			};
+		};
+	};
+};};
